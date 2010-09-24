@@ -9,6 +9,11 @@ port = "8000"
 
 class AllMethods:
     click = ldtp.click
+    selectrow = ldtp.selectrow
+    selectrowpartialmatch = ldtp.selectrowpartialmatch
+    gettablerowindex = ldtp.gettablerowindex
+    checkrow = ldtp.checkrow
+
 
 
 def usage():
