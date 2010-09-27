@@ -1,6 +1,9 @@
 package com.redhat.qe.ldtpclient;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.xmlrpc.XmlRpcException;
 
 import com.redhat.qe.xmlrpc.Session;
 
@@ -9,72 +12,116 @@ public class LDTPClient {
 	protected URL url;
 	
 	
-	public LDTPClient(String url) throws Exception {
-		this.url = new URL(url);
+	public LDTPClient(String url)  {
+		try {
+			this.url = new URL(url);
+		}catch (MalformedURLException mue){
+			throw new RuntimeException(mue);
+		}
 		session = new Session("", "", this.url);
 	}
 	
-	public void init() throws Exception{
-		session.init();
+	public void init() {
+		try {
+			session.init();
+		} catch (Exception e){
+			throw new RuntimeException("Could not initialize xmlrpc client.", e);
+		}
 	}
 	
-	public Integer launchApp(String binary, String[] arguments) throws Exception {
+	public Integer launchApp(String binary, String[] arguments)  {
 		return invoke("launchapp", Integer.class, binary, arguments);
 	}
 
-	public Integer click(String windowName, String componentName) throws Exception {
-		return invoke("click", Integer.class, windowName, componentName);
+	public Integer click(Element element)  {
+		return invoke("click", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 
-	public Integer stateEnabled(String windowName, String componentName) throws Exception {
-		return invoke("stateenabled", Integer.class, windowName, componentName);
+	public Integer stateEnabled(Element element)  {
+		return invoke("stateenabled", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 	
-	public Integer check(String windowName, String componentName) throws Exception {
-		return invoke("check", Integer.class, windowName, componentName);
+	public Integer check(Element element)  {
+		return invoke("check", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 	
-	public Integer uncheck(String windowName, String componentName) throws Exception {
-		return invoke("uncheck", Integer.class, windowName, componentName);
+	public Integer uncheck(Element element)  {
+		return invoke("uncheck", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 
-	public Integer verifyCheck(String windowName, String componentName) throws Exception {
-		return invoke("verifycheck", Integer.class, windowName, componentName);
+	public Integer verifyCheck(Element element)  {
+		return invoke("verifycheck", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 
-	public Integer getTableRowIndex(String windowName, String componentName, String tableName, String cellValue) throws Exception {
-		return invoke("gettablerowindex", Integer.class, windowName, componentName, tableName, cellValue);
+	public Integer getTableRowIndex(Element element, String tableName, String cellValue)  {
+		return invoke("gettablerowindex", Integer.class, element.getWindowName(), element.getComponentName(), tableName, cellValue);
 	}
 	
-	public Integer checkRow(String windowName, String componentName, Integer rowIndex, Integer colIndex) throws Exception {
-		return invoke("checkrow", Integer.class, windowName, componentName, rowIndex, colIndex);
+	public Integer checkRow(Element element, Integer rowIndex, Integer colIndex)  {
+		return invoke("checkrow", Integer.class, element.getWindowName(), element.getComponentName(), rowIndex, colIndex);
 	}
 	
-	public String[] getAllStates(String windowName, String componentName) throws Exception {
-		return invoke("getallstates", String[].class, windowName, componentName);
+	public String[] getAllStates(Element element)  {
+		return invoke("getallstates", String[].class, element.getWindowName(), element.getComponentName());
 	}
 
-	public Integer hasstate(String windowName, String componentName, String state) throws Exception {
-		return invoke("hasstate", Integer.class, windowName, componentName, state);
+	public Integer hasstate(Element element, String state)  {
+		return invoke("hasstate", Integer.class, element.getWindowName(), element.getComponentName(), state);
 	}
 
-	public Integer selectRowPartialMatch(String windowName, String componentName, String matchText) throws Exception {
-		return invoke("selectrowpartialmatch", Integer.class, windowName, componentName, matchText);
+	public Integer selectRowPartialMatch(Element element, String matchText)  {
+		return invoke("selectrowpartialmatch", Integer.class, element.getWindowName(), element.getComponentName(), matchText);
 	}
 
-	public Integer waitTilGuiExist(String windowName, String componentName) throws Exception {
-		return invoke("waittillguiexist", Integer.class, windowName, componentName);
+	public Integer waitTilGuiExist(Element element)  {
+		return invoke("waittillguiexist", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+	
+	public Integer setTextValue(Element element, String text)  {
+		return invoke("settextvalue", Integer.class, element.getWindowName(), element.getComponentName(), text);
+	}
+
+	public String getTextValue(Element element)  {
+		return invoke("gettextvalue", String.class, element.getWindowName(), element.getComponentName());
+	}
+	
+	public Integer activateWindow(Element element)  {
+		return invoke("activatewindow", Integer.class, element.getWindowName());
+	}
+	
+	public Integer closeWindow(Element element)  {
+		return invoke("closewindow", Integer.class, element.getWindowName());
 	}
 
 
-
-	public <T>T invoke(String methodName, Class<T> returnType, Object... args) throws Exception{
-		return (T)session.getClient().execute(methodName, args);
+	/*
+	 * below are higher level methods that provide some common abstractions
+	 */
+	
+	public boolean isShowing(Element element) {
+		return hasstate(element, "showing") == 1;
 	}
-	public static void main(String... args) throws Exception{
+
+	public <T>T invoke(String methodName, Class<T> returnType, Object... args) {
+		try {
+			return (T)session.getClient().execute(methodName, args);
+		} catch (XmlRpcException xe) {
+			throw new RuntimeException("XMLRPC call failed", xe);
+		}
+	}
+	public static void main(String... args) {
 		LDTPClient client  = new LDTPClient("http://jweiss-rhel6-1.usersys.redhat.com:8001/");
 		client.init();
 		client.launchApp("subscription-manager-gui", new String[] {});
+		Element mainDialog = new Element("dialog_updates", "");
+		Element closeButton = new Element("dialog_updates", "button_close");
+		
+		client.waitTilGuiExist(mainDialog);
+		Integer state = client.hasstate(closeButton, "showing");
+		System.out.println("showing state is " + state);
+		if (state == 1) {
+			client.click(closeButton);
+		}
 		
 	}
 

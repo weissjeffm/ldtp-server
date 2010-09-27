@@ -18,6 +18,11 @@ import org.apache.velocity.exception.ResourceNotFoundException;
  *	to remotely control GTK (and java and other UIs) apps.  If the LDTP server
  *  API changes, you can make changes to the the API list here and regenerate
  *  the client.
+ *  
+ *  9/27/10 - currently not using this class, decided to just write the java by
+ *  hand instead of generating it, at this point it doesn't seem like generating 
+ *  it will save enough effort to be worth it.  But i'll keep what i've done so far 
+ *  just in case. - jweiss
  */
 public class Generator {
 
