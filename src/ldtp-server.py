@@ -3,9 +3,12 @@ import ldtp
 import sys
 import SimpleXMLRPCServer
 import getopt
+import logging
+log = logging.getLogger("xmlrpcserver.ldtp")
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 port = "8000"
-
 
 class AllMethods:
     click = ldtp.click
@@ -13,8 +16,17 @@ class AllMethods:
     selectrowpartialmatch = ldtp.selectrowpartialmatch
     gettablerowindex = ldtp.gettablerowindex
     checkrow = ldtp.checkrow
-
-
+    launchapp = ldtp.launchapp
+    waittillguiexist = ldtp.waittillguiexist
+    hasstate = ldtp.hasstate
+    getallstates = ldtp.getallstates
+    verifycheck = ldtp.verifycheck
+    check = ldtp.check
+    settextvalue = ldtp.settextvalue
+    gettextvalue = ldtp.gettextvalue
+    activatewindow = ldtp.activatewindow
+    closewindow = ldtp.closewindow
+    getobjectlist = ldtp.getobjectlist
 
 def usage():
     print("Usage:\n(-p, --port=) Port to listen on\n-h This help message\n")
