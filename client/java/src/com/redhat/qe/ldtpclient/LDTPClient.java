@@ -73,6 +73,10 @@ public class LDTPClient {
 		return invoke("selectrowpartialmatch", Integer.class, element.getWindowName(), element.getComponentName(), matchText);
 	}
 
+	public Integer waitTilGuiExist(Element element, int timeoutSeconds)  {
+		return invoke("waittillguiexist", Integer.class, element.getWindowName(), element.getComponentName(), timeoutSeconds);
+	}
+	
 	public Integer waitTilGuiExist(Element element)  {
 		return invoke("waittillguiexist", Integer.class, element.getWindowName(), element.getComponentName());
 	}
@@ -100,6 +104,11 @@ public class LDTPClient {
 	
 	public boolean isShowing(Element element) {
 		return hasstate(element, "showing") == 1;
+	}
+
+	public void setChecked(Element element, boolean checked) {
+		if (checked) check(element);
+		else uncheck(element);
 	}
 
 	public <T>T invoke(String methodName, Class<T> returnType, Object... args) {
