@@ -28,7 +28,7 @@ public class LDTPClient {
 			throw new RuntimeException("Could not initialize xmlrpc client.", e);
 		}
 	}
-	
+		
 	public Integer launchApp(String binary, String[] arguments)  {
 		return invoke("launchapp", Integer.class, binary, arguments);
 	}
@@ -93,8 +93,8 @@ public class LDTPClient {
 		return invoke("activatewindow", Integer.class, element.getWindowName());
 	}
 	
-	public Integer closeWindow(Element element)  {
-		return invoke("closewindow", Integer.class, element.getWindowName());
+	public void closeWindow(String windowTitle)  {
+		invoke("closewindow", null, windowTitle);
 	}
 
 
