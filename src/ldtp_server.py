@@ -27,6 +27,10 @@ class AllMethods:
     activatewindow = ldtp.activatewindow
     closewindow = ldtp.closewindow
     getobjectlist = ldtp.getobjectlist
+    getchild = ldtp.getchild
+    getobjectinfo = ldtp.getobjectinfo
+    getrowcount = ldtp.getrowcount
+    getcellvalue = ldtp.getcellvalue
 
 def usage():
     print("Usage:\n(-p, --port=) Port to listen on\n-h This help message\n")
