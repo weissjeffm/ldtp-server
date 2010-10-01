@@ -97,6 +97,14 @@ public class LDTPClient {
 		invoke("closewindow", null, windowTitle);
 	}
 
+	public String getCellValue(Element element, int row, int column){
+		return invoke("getcellvalue", String.class, element.getWindowName(), element.getComponentName(), row, column);
+	}
+	
+	public Integer getRowCount(Element element){
+		return invoke("getrowcount", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+	
 
 	/*
 	 * below are higher level methods that provide some common abstractions
