@@ -53,7 +53,7 @@ def main():
         usage()
         sys.exit(2)
 
-    port = 8000 #default port
+    port = 8001 #default port
 
     for o, a in opts:
         if o in ("-p", "--port"): 
