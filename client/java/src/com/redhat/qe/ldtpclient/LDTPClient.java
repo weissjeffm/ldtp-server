@@ -105,6 +105,25 @@ public class LDTPClient {
 		return invoke("getrowcount", Integer.class, element.getWindowName(), element.getComponentName());
 	}
 	
+	public Integer menuItemEnabled(Element element)  {
+		return invoke("menuitemenabled", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+
+	public Integer menuCheck(Element element)  {
+		return invoke("menucheck", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+
+	public Integer menuUncheck(Element element)  {
+		return invoke("menuuncheck", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+
+	public Integer selectMenuItem(MenuItem element)  {
+		return invoke("selectmenuitem", Integer.class, element.getWindowName(), element.getComponentName());
+	}
+
+	public Integer comboSelect(Element element, String item)  {
+		return invoke("comboselect", Integer.class, element.getWindowName(), element.getComponentName(), item);
+	}
 
 	/*
 	 * below are higher level methods that provide some common abstractions
